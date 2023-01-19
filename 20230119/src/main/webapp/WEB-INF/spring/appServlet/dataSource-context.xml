@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- db.properties에서 값을 읽어서 아래에서 사용한다. config앞에 슬래쉬(/)넣어야함-->
+	<context:property-placeholder location="classpath:/config/db.properties"/>
+	
+	<!-- DBCP연결 : db.properties에서 변수를 들고와서 사용한다. setter에 의한 주입방법(외부에 있는걸 이용해서 집어넣는다.)
+		name: basicDataSource의 변수
+		value: db.properties에서 쓰는거
+	-->
+	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="dataSource">
+		<property name="driverClassName" value="${driver}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${user}" />
+		<property name="password" value="${password}" />
+	</bean>
+	
+	<!-- Mybatis : 이것도 빈으로 등록해놔야 쓸수있으니까 등록해준다. sqlSession 이 이름으로 사용할것이다.-->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
+		<!-- 의존주입을 걸어준다. setter에 의한 주입방법이다. 주입할때는 value가 아니라 ref를 사용한다.
+		dataSource를 주입한다는것. -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- config의 위치 알려주기. 여기는 config앞에 슬래쉬 없어도됨 -->
+		<property name="configLocation" value="classpath:config/mybatis-config.xml"/>
+		<!-- mapper의 경로 알려주기 -->
+		<property name="mapperLocations" value="classpath*:co/micol/prj/**/map/*.xml"></property>
+	</bean>
+	
+	<!-- mybatis와 관련된걸 스캔하는 위치. map에 있는것만 스캔하라는거 -->
+	<mybatis-spring:scan base-package="co.micol.prj.**.map"/>
+</beans>
