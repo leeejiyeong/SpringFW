@@ -12,7 +12,7 @@ import co.micol.prj.member.vo.MemberVO;
 @Service	//어노테이션 빼면 연결 못한다..ㅎ 빼지말자..
 public class MemberServiceImpl implements MemberService {
 	
-	@Autowired
+	@Autowired	//의존 주입
 	private MemberMapper map;
 	
 	@Override
