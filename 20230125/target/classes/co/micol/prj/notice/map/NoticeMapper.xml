@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.micol.prj.notice.map.NoticeMapper">
+
+	<!-- 전체목록 -->
+	<select id="noticeList" resultType="co.micol.prj.notice.vo.NoticeVO">
+		SELECT * FROM NOTICE
+	</select>
+
+	<select id="noticeSelect">
+	
+	</select>
+	
+	<insert id="noticeInsert">
+	
+	</insert>
+	
+	<update id="noticeUpdate">
+	
+	</update>
+	
+	<delete id="noticeDelete">
+	
+	</delete>
+	
+	<!-- 검색 -->
+	<select id="noticeSearch" resultType="co.micol.prj.notice.vo.NoticeVO">
+		SELECT * FROM NOTICE
+		<if test="key == 'all'">WHERE 1 = 1</if>
+		<if test="key == 'title'">WHERE NOTICE_TITLE LIKE '%'||#{val}||'%'</if>
+		<if test="key == 'subject'">WHERE NOTICE_SUBJECT LIKE '%'||#{val}||'%'</if>
+		<if test="key == 'writer'">WHERE NOTICE_WRITER LIKE '%'||#{val}||'%'</if>
+		<if test="key == 'date'">WHERE NOTICE_DATE = #{val}</if>
+	</select>
+
+</mapper>
