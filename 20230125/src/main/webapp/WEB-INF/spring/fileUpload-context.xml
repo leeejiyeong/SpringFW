@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 파일 크기를 10mb(1024*1024*10)로 설정해주고, 메모리 최대 할당크기 설정, 한글이 깨지는걸 방지하기 위해서 
+		utf-8로 인코딩 해줌
+		webapp밑에 resources에 upload폴더를 생성해서 거기다가 올릴것임	
+	-->
+	<bean
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		id="multipartResolver">
+		<property name="maxUploadSize" value="10485760" />
+		<property name="maxInMemorySize" value="10485760"></property>
+		<property name="defaultEncoding" value="utf-8"></property>
+	</bean>
+
+</beans>

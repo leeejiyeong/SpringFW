@@ -17,4 +17,6 @@ public interface NoticeMapper {
 	List<NoticeVO> noticeSearch(@Param ("key") String key, @Param("val") String val);	
 	//전달되는 매개변수가 2개이상일때 파라메타를 붙여줘야한다.
 	//key라는게 넘어오면 key, val이라는게 넘어오면 val
+	
+	void noticeHitUpdate(int id);		//조회수 증가
 }

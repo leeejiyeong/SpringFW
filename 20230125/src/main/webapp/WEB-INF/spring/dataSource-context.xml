@@ -16,6 +16,19 @@
 		<property name="password" value="${password}"/>
 	</bean>
 	
+	<!-- HikariCP를 이용할 경우 pom.xml에 라이브러리 추가 후  bean을 이렇게 바꾸면 됨 (생성자에 의한 주입방법 사용)
+	<bean class="com.zaxxer.hikari.HikariConfig" id="hikariConfig">
+		<property name="driverClassName" value="${driver}"/>
+		<property name="jdbcUrl" value="${url}"/>
+		<property name="username" value="${user}"/>
+		<property name="password" value="${password}"/>
+	</bean>
+	
+	<bean class="com.zaxxer.hikari.HikariDataSource" id="hikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig"/>
+	</bean>
+	-->
+	
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="configLocation" value="classpath:config/mybatis-config.xml"/>

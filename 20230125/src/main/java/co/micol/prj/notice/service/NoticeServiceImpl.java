@@ -21,6 +21,7 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public NoticeVO noticeSelect(NoticeVO vo) {
+		noticeHitUpdate(vo.getNoticeId());		//조회수 증가
 		return noticeMapper.noticeSelect(vo);
 	}
 
@@ -42,6 +43,12 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public List<NoticeVO> noticeSearch(String key, String val) {
 		return noticeMapper.noticeSearch(key, val);
+	}
+
+	//조회수 증가
+	@Override
+	public void noticeHitUpdate(int id) {
+		noticeMapper.noticeHitUpdate(id);
 	}
 
 }
