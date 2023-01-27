@@ -1,0 +1,6 @@
+오라클 공식 사이트 날짜 양식
+docs.oracle.com -> oracle database -> 버전선택 -> information integration선택
+->왼쪽 목록에 database administration 선택 -> sql language reference
+-> 3 basic elements of oracle sql
+
+https://docs.oracle.com/cd/E11882_01/server.112/e41084/sql_elements004.htm#SQLRF00212

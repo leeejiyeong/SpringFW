@@ -28,15 +28,18 @@
 		,#{noticeFile},#{noticeFileDir})
 	</insert>
 	
-	<!-- 게시글 수정하기 : MyBatis의 동적 SQL 기능 사용(<set>으로 여러개 처리하기)  -->
+	<!-- 게시글 수정하기 : MyBatis의 동적 SQL 기능 사용(<set>으로 여러개 처리하기).
+		각 if문 안에 연결될때 콤마 적어줘야함  -->
 	<update id="noticeUpdate">
 		UPDATE NOTICE
 		<set>
 			<if test="noticeDate != null"> NOTICE_DATE = #{noticeDate},</if>
-			<if test="noticeTitle != null"> NOTICE_TITLE = #{noticeTitle}</if>
-			<if test="noticeSubject != null"> NOTICE_SUBJECT = #{noticeSubject}</if>
-			<if test="noticeFile != null"> NOTICE_FILE = #{noticeFile}</if> 
-			<if test="noticeFileDir != null"> NOTICE_FILE_DIR = #{noticeFileDir}</if>
+			<if test="noticeTitle != null"> NOTICE_TITLE = #{noticeTitle},</if>
+			<if test="noticeSubject != null"> NOTICE_SUBJECT = #{noticeSubject},</if>
+			NOTICE_FILE = #{noticeFile}, 
+			NOTICE_FILE_DIR = #{noticeFileDir}
+<!-- 			<if test="noticeFile != null"> NOTICE_FILE = #{noticeFile},</if>  -->
+<!-- 			<if test="noticeFileDir != null"> NOTICE_FILE_DIR = #{noticeFileDir}</if> -->
 		</set>
 		WHERE NOTICE_ID = #{noticeId}
 	</update>
@@ -45,9 +48,11 @@
 	<update id="noticeHitUpdate">
 		UPDATE NOTICE SET NOTICE_HIT = NOTICE_HIT +1 WHERE NOTICE_ID = #{id}
 	</update>
-
+	
+	<!-- 게시물 삭제  -->
 	<delete id="noticeDelete">
-
+		DELETE FROM NOTICE
+		WHERE NOTICE_ID = #{noticeId}
 	</delete>
 
 	<!-- 검색 -->
