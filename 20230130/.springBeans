@@ -9,7 +9,6 @@
 	<configs>
 		<config>src/main/webapp/WEB-INF/spring/datasource-context.xml</config>
 		<config>src/main/webapp/WEB-INF/spring/fileUpload-context.xml</config>
-		<config>src/main/webapp/WEB-INF/spring/aop-context.xmlsss</config>
 	</configs>
 	<autoconfigs>
 		<config>src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml</config>

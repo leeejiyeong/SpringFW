@@ -17,7 +17,7 @@
 				<li><a class="menuLink" href="memberJoinForm.do">Join</a></li>
 			</c:if>
 			
-			<li><a class="menuLink" href="#">Content</a></li>
+			<li><a class="menuLink" href="CustomerList.do">shopping</a></li>
 			
 			<c:if test="${author eq 'ADMIN'}">
 				<li><a class="menuLink" href="memberListSelect.do">Member</a></li>

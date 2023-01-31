@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.micol.prj.shop.map.ShopMapper">
+	
+	<!-- property : 자바에서 사용하는 변수명 , solumn : db에서 사용하는 테이블 컬럼명 
+		id로 시작하는건 primaryKey. 나머지는 result사용
+	-->
+	<resultMap type="co.micol.prj.shop.vo.ShopCustomerVO" id="customer">	
+		<id property="shCustomerId" column="sh_customer_id"/>
+		<result property="shCustomerName" column="sh_customer_name"/>
+		<result property="shCustomerTel" column="sh_customer_tel"/>
+		<association property="shopMember" javaType="co.micol.prj.shop.vo.ShopMemberVO">
+			<id property="shId" column="sh_id"/>
+			<result property="shPassword" column="sh_password"/>
+			<result property="shGubun" column="sh_gubun"/>
+		</association>
+	</resultMap>
+	
+	<!-- shopMapper.java펴놓고 만들자 -->
+	<select id="getCustomerList" resultType="map">
+		SELECT S.*, 
+			C.SH_CUSTOMER_NAME, 
+			C.SH_CUSTOMER_TEL
+		FROM SHOPMEMBER S, SHOPCUSTOMER C
+		WHERE S.SH_ID = C.SH_CUSTOMER_ID
+	</select>
+
+	<select id="getShopList" resultType="co.micol.prj.shop.vo.ShopUserVO">
+		SELECT U.*,
+			S.SH_PASSWORD, 
+			S.SH_GUBUN
+		FROM SHOPMEMBER S, SHOPUSER U
+		WHERE S.SH_ID = U.SH_USER_ID
+	</select>
+	
+	<!-- 위에서 만든 resultMap의 id를 적어줌 -->
+	<select id="getCustomerList2" resultMap="customer">
+		SELECT * 
+		FROM SHOPMEMBER S, SHOPCUSTOMER C
+		WHERE S.SH_ID = C.SH_CUSTOMER_ID
+	</select>
+
+	<select id="loginCheck" resultType="co.micol.prj.shop.vo.ShopMemberVO">
+	
+	</select>
+
+	<select id="isIdCheck" resultType="boolean">
+		SELECT 
+			CASE WHEN COUNT(SH_ID) = 1 THEN 1 ELSE 0 END AS ID
+		FROM SHOPMEMBER
+		WHERE SH_ID = #{id}
+		
+	</select>
+
+	<insert id="setShopUser">
+		INSERT INTO SHOPUSER
+		VALUES(#{shUserId}, #{shUserName}, #{shUserShopname})
+	</insert>
+
+	<insert id="setCustomer">
+		INSERT INTO SHOPCUSTOMER
+		VALUES(#{shCustomerId}, #{shCustomerName},#{shCustomerTel})
+	</insert>
+
+	<insert id="setMember">
+		INSERT INTO SHOPMEMBER 
+		VALUES(#{shId}, #{shPassword}, #{shGubun})
+	</insert>
+
+</mapper>
