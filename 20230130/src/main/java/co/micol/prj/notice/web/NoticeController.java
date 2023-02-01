@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,7 +70,7 @@ public class NoticeController {
 	public String noticeInsert(NoticeVO vo, MultipartFile file) {
 		String saveFolder = ServletContext.getRealPath("/resources/upload"); // 파일 저장경로 설정
 
-		if (!file.isEmpty()) { 			// 첨부 파일이 존재할때만 로직 실행
+		if (!file.isEmpty()) { // 첨부 파일이 존재할때만 로직 실행
 
 			// 파일이름 같을때 충돌방지를 위해서 UUID사용
 			String fileName = UUID.randomUUID().toString();
@@ -100,7 +101,7 @@ public class NoticeController {
 	@PostMapping("/noticeDelete.do")
 	public String noticeDelete(NoticeVO vo, Model model) { // model은 메시지를 띄우기 위해 필요. 안할꺼면 noticeVO만 써도됨
 		File file = new File(vo.getNoticeFileDir());
-        boolean result = file.delete();
+		boolean result = file.delete();
 		int n = noticeService.noticeDelete(vo);
 		if (n != 0) {
 			model.addAttribute("message", "정상적으로 삭제되었습니다.");
@@ -110,63 +111,59 @@ public class NoticeController {
 		return "notice/noticeMessage"; // 삭제 후 메시지 출력
 	}
 
-	// String말고 modelAndView객체 사용(최근엔 권장하지 않는 방법)
+	/*
+	 * // String말고 modelAndView객체 사용(최근엔 권장하지 않는 방법)
+	 * 
+	 * @PostMapping("/noticeEdit.do")
+	 * 
+	 * public ModelAndView noticeEdit(@ModelAttribute("notice") NoticeVO vo,
+	 * ModelAndView mv, MultipartFile file) {
+	 * 
+	 * //첨부파일을 수정할수도 있으니까 위에 insert에서 적었던거 다시 적어줌 String saveFolder =
+	 * ServletContext.getRealPath("/resources/upload"); // 파일 저장경로 설정
+	 * System.out.println("=============1"); if (!file.isEmpty()) { // 첨부 파일이 존재할때만
+	 * 로직 실행 System.out.println("=============2"); // 파일이름 같을때 충돌방지를 위해서 UUID사용
+	 * String fileName = UUID.randomUUID().toString(); fileName = fileName +
+	 * file.getOriginalFilename();
+	 * 
+	 * File uploadFile = new File(saveFolder, fileName); // 변수로 경로랑 파일이름 try {
+	 * file.transferTo(uploadFile); // 파일 저장 } catch (Exception e) {
+	 * e.printStackTrace(); } vo.setNoticeFile(file.getOriginalFilename()); // 원본파일명
+	 * vo.setNoticeFileDir(saveFolder + fileName); // 물리적 파일 저장 위치(경로 + 파일이름) }
+	 * 
+	 * //❗❗ 파일수정할때 첨부파일이 바뀌면 기존의 첨부파일을 지워야되는데 그건 어케할거임?
+	 * 
+	 * int n = noticeService.noticeUpdate(vo); // db 데이터가 수정됨
+	 * System.out.println("=============3"); if (n != 0) { // 성공했을때 돌려줄페이지
+	 * mv.setViewName("notice/noticeUpdate"); } else { // 실패했을때 돌려줄페이지
+	 * mv.addObject("message", "정상적으로 수정되지 못했습니다.");
+	 * mv.setViewName("notice/noticeMessage"); } return mv; }
+	 */
+
+	// 같은방법 Model사용
+
 	@PostMapping("/noticeEdit.do")
-
-	public ModelAndView noticeEdit(NoticeVO vo, ModelAndView mv, MultipartFile file) {
-		
-		//첨부파일을 수정할수도 있으니까 위에 insert에서 적었던거 다시 적어줌
-		String saveFolder = ServletContext.getRealPath("/resources/upload"); // 파일 저장경로 설정
-		System.out.println("=============1");
-		if (!file.isEmpty()) { // 첨부 파일이 존재할때만 로직 실행
-			System.out.println("=============2");
-			// 파일이름 같을때 충돌방지를 위해서 UUID사용
-			String fileName = UUID.randomUUID().toString();
-			fileName = fileName + file.getOriginalFilename();
-
-			File uploadFile = new File(saveFolder, fileName); // 변수로 경로랑 파일이름
-			try {
-				file.transferTo(uploadFile); // 파일 저장
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			vo.setNoticeFile(file.getOriginalFilename()); // 원본파일명
-			vo.setNoticeFileDir(saveFolder + fileName); // 물리적 파일 저장 위치(경로 + 파일이름)
-		}
-		
-		//❗❗ 파일수정할때 첨부파일이 바뀌면 기존의 첨부파일을 지워야되는데 그건 어케할거임?
-		
+	public String noticeEdit(@ModelAttribute("notice") NoticeVO vo, Model model) {
+		String viewPage = null;
 		int n = noticeService.noticeUpdate(vo); // db 데이터가 수정됨
-		System.out.println("=============3");
 		if (n != 0) { // 성공했을때 돌려줄페이지
-			mv.addObject("notice", noticeService.noticeSelect(vo));
-			mv.setViewName("notice/noticeSelect");
+			viewPage = "notice/noticeUpdate";
 		} else { // 실패했을때 돌려줄페이지
-			mv.addObject("message", "정상적으로 수정되지 못했습니다.");
-			mv.setViewName("notice/noticeError");
+			model.addAttribute("message", "정상적으로 수정되지 못했습니다.");
+			viewPage = "notice/noticeMessage";
 		}
-		return mv;
+		return viewPage;
 	}
-	/*
-	 * //같은방법 Model사용
-	 * 
-	 * @PostMapping("/noticeEdit.do") public String noticeEdit(NoticeVO vo, Model
-	 * model) { String viewPage = null; int n = noticeService.noticeUpdate(vo); //db
-	 * 데이터가 수정됨 if(n != 0) { //성공했을때 돌려줄페이지 model.addAttribute("notice",
-	 * noticeService.noticeSelect(vo)); viewPage = "notice/noticeSelect"; }else { //
-	 * 실패했을때 돌려줄페이지 model.addAttribute("message", "정상적으로 수정되지 못했습니다."); viewPage =
-	 * "notice/noticeError"; } return viewPage; }
-	 */
-	
-	//업로드 파일 삭제
-	/*
-	 * @PostMapping("/removeFile") public ResponseEntity<Boolean> removeFile(String
-	 * fileName){ String srcFileName = null; srcFileName =
-	 * URLDecoder.decode(fileName,"UTF-8");
-	 * 
-	 * File file = new File(uploadPath + )
-	 * 
-	 * }
-	 */
-	
+
+	// 업로드 파일 삭제
+
+//	@PostMapping("/removeFile") public ResponseEntity<Boolean> removeFile(String
+//	  fileName){ 
+//		String srcFileName = null; 
+//		srcFileName = URLDecoder.decode(fileName,"UTF-8");
+//	  
+//	  File file = new File(uploadPath + )
+//	 
+//	}
+
 }

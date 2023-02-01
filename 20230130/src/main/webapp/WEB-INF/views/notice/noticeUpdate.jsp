@@ -16,7 +16,7 @@
 		<div>
 			<h1>게시글 수정</h1>
 		</div>
-		<form id="frm" action="noticeEdit.do" method="post">
+		<form id="frm" method="post" enctype="multipart/form-data">
 			<div>
 				<table border="1">
 					<tr>
@@ -58,10 +58,29 @@
 			<br>
 			<div>
 				<input type="hidden" name="noticeId" value="${notice.noticeId }">
-				<input type="submit" value="수정완료"> 
-				<input type="reset" value="취소" onclick="location.href ='./noticeList.do'">
+				<input type="button" value="수정완료" onclick="update()"> 
+				<input type="button" value="취소" onclick="location.href ='./noticeList.do'">
 			</div>
 		</form>
 	</div>
 </body>
+
+<script type="text/javascript">
+	function loaded(){
+		let message = "${message}";		//model에서 넘어온 변수
+		if(message != ""){
+			alert(message);
+		}
+	}
+	
+	//ajax로 할때는 폼에 action태그가 없어야하고 버튼도 submit이 아닌 button으로 바꿔줘야함(button onclick으로 작동하게)
+	function update(){
+		//데이터 set
+		
+// 		fetch(url,{
+			
+// 		}).then(response => alert(response.text()));
+	}
+	
+</script>
 </html>
