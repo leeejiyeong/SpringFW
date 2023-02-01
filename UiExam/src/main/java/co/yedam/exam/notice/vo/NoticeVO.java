@@ -1,4 +1,4 @@
-package co.micol.prj.notice.vo;
+package co.yedam.exam.notice.vo;
 
 import java.sql.Date;
 
@@ -12,10 +12,8 @@ import lombok.Setter;
 public class NoticeVO {
 	private int noticeId;
 	private String noticeWriter;
-	
-	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")	//jackson json데이터를 불러올때 날짜 포멧을 맞춰준다
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")  //jackson json객체시 날짜 포맷설정
 	private Date noticeDate;
-	
 	private String noticeTitle;
 	private String noticeSubject;
 	private int noticeHit;

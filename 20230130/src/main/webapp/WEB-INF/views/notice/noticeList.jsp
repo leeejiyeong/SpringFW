@@ -27,7 +27,7 @@
 									<option value="date">작성일자</option>
 							</select></td>
 							<td width="250"><input type="text" name="val" id="val">
-								&nbsp; <input type="button" onclick="searchList()" value="검색">
+								&nbsp; <input type="button" onclick="searchListJson()" value="검색">
 							</td>
 						</tr>
 					</table>
@@ -101,15 +101,56 @@
 		.then(data => htmlConvert(data));
 	}
 	
+	//json을 html로 변환해서 화면에 뿌림
 	function htmlConvert(data){
-		//여기서 화면에 처리하는 과정을 작성하면됨
+		document.querySelector('#notice-list').remove();  //리스트의 <tbody> 삭제
+		const container = document.createElement('tbody'); //<tbody> 태그 생성
+		container.id = 'notice-list';  //tbody id값 부여
+		container.innerHTML = datas.map(data => createHTMLString(data)).join("");  //Html 변환
+		document.querySelector('#list-table').appendChild(container);  //원하는 위치에 추가
+	
 		console.log(data);
+	}
+	
+	function createHTMLString(data){  //html 변환 코드 css, event Listner를 활용하면 깔끔하게 정리됨
+		if(data.noticeFile == null) //첨부파일 존재유무 확인
+			data.noticeFile = ""  //존재하지 않으면 공백
+		else 
+			data.noticeFile = "@"; //존재하면 @로 표시
+	
+		let str = "<tr onmouseover=this.style.background='#fcecae';"
+			str += " onmouseleave=this.style.background='#FFFFFF';"  //앞 쪽 공백 주의
+			str += " onclick=";  //앞 쪽 공백 주의
+			str += "noticeSel('"+ data.noticeId +"')" +">";
+			str += "<td align=center>" + data.noticeId + "</td>";
+			str += "<td>" + data.noticeTitle + "</td>";
+			str += "<td align=center>" + data.noticeWriter + "</td>";
+			str += "<td align=center>" + data.noticeDate + "</td>";
+			str += "<td align=center>" + data.noticeHit + "</td>";
+			str += "<td align=center>" + data.noticeFile + "</td></tr>";
+		return str;
 	}
 	
 	//게시글 상세보기 클릭 이벤트
 	function noticeSel(n){
 		document.getElementById("noticeId").value = n;	//noticeId의 값을 n에 담아줌
 		hiddenFrm.submit();
+	}
+	
+	function searchListJson(){
+		let url = 'AjaxSearchList.do';
+		let key = document.getElementById("key").value;	//옵션창 고른거 value값이 넘어감
+		let val = document.getElementById("val").value;	//검색창에 적은 내용이 넘어감
+		
+		let payload = {"key": key, "val": val};	
+		
+		fetch(url, { 
+			  method: 'POST',
+			  headers: {'Content-Type': 'application/json'},
+			  body: JSON.stringify(payload)
+			})
+		.then(response => response.json())
+		.then(data => htmlConvert(data));
 	}
 	</script>
 </body>

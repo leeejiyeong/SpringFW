@@ -12,22 +12,21 @@
 			<h1>쇼핑몰 회원가입</h1>
 		</div>
 		<div>
-			<form id="frm" onsubmit="return formsubmit()" method="post">
+			<form id="frm" onsubmit="return formSubmit()" method="post">
 				<div>
 					<table border="1">
 						<tr>
 							<th>아이디</th>
 							<td><input type="text" id="shId" name="shId" required="required">
-							<button type="button" id="idCheck" value="no" onclick="idcheck()"> 중복체크 </button>
-							</td>
+							<button type="button" id="idCheck" value="no" onclick="idcheck()">중복체크</button></td>
 						</tr>
 						<tr>
 							<th>패스워드</th>
-							<td><input type="password" id="shPassword" name="shPassword" required="required"></td>
+							<td><input type="password" id="shPassword" name="shPassword" required></td>
 						</tr>
 						<tr>
 							<th>패스워드 확인</th>
-							<td><input type="password" id="shPasswordCheck" name="shPasswordCheck"></td>
+							<td><input type="password" id="shPasswordCheck" name="shPasswordCheck" required="required"></td>
 						</tr>
 						<tr>
 							<th>구분</th>
@@ -66,103 +65,135 @@
 						<table>
 							<tr>
 								<th>이름</th>
-								<td><input type="text" id="" name=""></td>
+								<td><input type="text" id="shEmpName" name="shEmpName" required="required"></td>
 							</tr>
 							<tr>
-								<th>연락처</th>
-								<td><input type="tel" id="" name=""></td>
+								<th>부서</th>
+								<td>
+									<select id="shEmpDpt" name="shEmpDpt">
+										<option value="관리부">관리부</option>
+										<option value="마케팅부">마케팅부</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th>입사일</th>
+								<td><input type="date" id="shEmpStartDate" name="shEmpStartDate" required="required"></td>
+							</tr>
+							<tr>
+								<th>퇴사일</th>
+								<td><input type="date" id="shEmpEndDate" name="shEmpEndDate" required="required"></td>
+							</tr>
+							<tr>
+								<th>직급</th>
+								<td>
+									<select id="shEmpRank" name="shEmpRank">
+										<option value="팀원">팀원</option>
+										<option value="팀장">팀장</option>
+									</select>
+								</td>
 							</tr>
 						</table>
 					</div>
 				</div><br>
-				<input type="submit" value="등록"> &nbsp;
+				<input type="submit" value="등록">&nbsp;&nbsp;
 				<input type="reset" value="취소">
 			</form>
 		</div>
 	</div>
-	
-	<script type="text/javascript">
-	function showDiv(n){
-		if(n == 'C'){
+	<script>
+	function showDiv(option){
+		if(option == 'C'){
 			document.getElementById('customer').setAttribute('style','display:block')
 			document.getElementById('user').setAttribute('style','display:none')
 			document.getElementById('employee').setAttribute('style','display:none')
-		}else if(n=='U'){
+		}else if(option == 'U'){
 			document.getElementById('customer').setAttribute('style','display:none')
 			document.getElementById('user').setAttribute('style','display:block')
 			document.getElementById('employee').setAttribute('style','display:none')
-		}else if(n=='E'){
+		}else if(option == 'E'){
 			document.getElementById('customer').setAttribute('style','display:none')
 			document.getElementById('user').setAttribute('style','display:none')
 			document.getElementById('employee').setAttribute('style','display:block')
 		}
 	}
 	
-	function idcheck(){
+	function idcheck() {
 		let id = document.getElementById("shId").value;
 		fetch("ajaxShopIdCheck.do?id="+id)
 			.then(response => response.text())
 			.then(data => idCheckResult(data));
 	}
 	
-	function idCheckResult(data){
-		if(data == "true"){
-			alert("이미 사용중인 아이디 입니다.")
-			document.getElementById('shId').value ="";
+	function idCheckResult(data) {
+		if(data == "true") {
+			alert("이미 사용하는 아이디 입니다.");
 		}else if(data == "false"){
-			alert("사용 가능한 아이디 입니다.")
-			document.getElementById("idChk").value = "yes";
+			alert("사용가능한 아이디 입니다.");
+			document.getElementById("idCheck").value="yes";
 		}
 	}
 	
-	function formsubmit(){
-		
-		if(frm.idChk.value == 'no'){
-			alert('아이디 중복체크를 하세요');
+	function formSubmit() {
+//		let option = document.querySelector('input[name="shGubun"]:checked').value;
+		let option = document.querySelector('#shGubun:checked').value;
+		if(frm.idCheck.value == 'no') {
+			alert("아이디 중복체크를 해주세요");
 			return false;
-		}else if(frm.shPassword.value != frm.shPasswordCheck.value){
-			alert("비밀번호가 일치하지 않습니다. 다시 확인해주세요")
-			return false;
+		}else if(frm.shPassword.value != frm.shPasswordCheck.value) {
+			alert("패스워드를 확인해주세요.");
+			return false; 
 		}
-		return true;
-		
-// 		let option = document.getElementById("shGubun").value;
-// 		let option = document.querySelector("input[name='shGubun']:checked").value;
-		let option = document.querySelector("#shGubun:checked").value;
-		
-		if(option == 'C'){
-			if(frm.shCustomerName.value ==""){
+				
+		if (option == 'C') {
+			if(frm.shCustomerName.value =="") {
 				alert("사용자 이름을 입력하세요");
-				frm.shCustomerName.focus();
+				frm.shCustomerName.forcus();
 				return false;
-			}else if(frm.shCustomerTel.value ==""){
-				alert("사용자 연락처를 입력하세요");
-				frm.shCustomerTel.focus();
+			}else if(frm.shCustomerTel.value==""){
+				alert("사용자 전화번호를 입력하세요");
+				frm.shCustomerTel.forcus();
 				return false;
 			}
-			
 			frm.action = "shopCustomerJoin.do";
-			
-		}else if(option == 'U'){
-			console.log("상점주주")
-			if(frm.shUserName.value ==""){
+		}else if(option == 'U') {
+			if(frm.shUserName.value =="") {
 				alert("대표자 이름을 입력하세요");
-				frm.shUserName.focus();
+				frm.shUserName.forcus();
 				return false;
-			}else if(frm.shUserShopName.value ==""){
+			}else if(frm.shUserShopname.value==""){
 				alert("상호명을 입력하세요");
-				frm.shUserShopname.focus();
+				frm.shUserShopname.forcus();
 				return false;
 			}
 			frm.action = "shopUserJoin.do";
-			
 		}else {
 			//폼 체크 구문 작성
-			frm.action = "shopEmployeejoin.do"
-		}
-		
+			if(frm.shEmpName.value == ""){
+				alert("이름을 입력하세요")
+				frm.shEmpName.forcus();
+				return false;
+			}else if(frm.shEmpDpt.value == ""){
+				alert("부서를 입력하세요")
+				frm.shEmpDpt.forcus();
+				return false;
+			}else if(frm.shEmpStartDate.value == ""){
+				alert("입사일을 선택하세요")
+				frm.shEmpStartDate.forcus();
+				return false;
+			}else if(frm.shEmpEndDate.value == ""){
+				alert("입사일을 선택하세요")
+				frm.shEmpEndDate.forcus();
+				return false;
+			}else if(frm.shEmpRank.value == ""){
+				alert("직급을 입력하세요")
+				frm.shEmpRank.forcus();
+				return false;
+			}
+			frm.action = "shopEmployeeJoin.do";
+		}	
+		return true;
 	}
-	
 	</script>
 </body>
 </html>

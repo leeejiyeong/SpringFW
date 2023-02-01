@@ -35,7 +35,7 @@ public class ShopController {
 		return "shop/getCustomerList2";
 	}
 
-	@RequestMapping("/setMemberJoinForm.do") // 폼 호출하는것도 getmapping임
+	@GetMapping("/setMemberJoinForm.do") // 폼 호출하는것도 getmapping임
 	public String setMemberJoinForm() {
 		return "shop/setMemberJoinForm";
 	}
